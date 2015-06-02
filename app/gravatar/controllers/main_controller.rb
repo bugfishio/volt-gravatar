@@ -14,11 +14,15 @@ module Gravatar
 
     def gravatar_image_src
       Volt.fetch_current_user.then do |user|
-        email_address = user.email.downcase
-        hash = `md5(email_address)`
-        "//www.gravatar.com/avatar/#{hash}.jpg?s=#{image_size.to_s}&d=#{default_image}&r=#{rating}"
+        if user
+          email_address = user.email.downcase
+          hash = `md5(email_address)`
+          "//www.gravatar.com/avatar/#{hash}.jpg?s=#{image_size.to_s}&d=#{default_image}&r=#{rating}"
+        else
+          "//www.gravatar.com/avatar/00000000000000000000000000000000.jpg?s=#{image_size.to_s}&d=#{default_image}&r=#{rating}"
+        end
       end.fail do
-        "//www.gravatar.com/avatar/00000000000000000000000000000000.jpg?s=#{size.to_s}&d=#{default_image}&r=#{rating}"
+        "//www.gravatar.com/avatar/00000000000000000000000000000000.jpg?s=#{image_size.to_s}&d=#{default_image}&r=#{rating}"
       end
 
     end
